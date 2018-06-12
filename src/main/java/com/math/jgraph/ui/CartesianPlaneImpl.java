@@ -358,13 +358,13 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 									t1 = ((ExpressionImpl)expression).getTerm();
 									cosineTerm.setFunction(FunctionEnum.cos);
 									cosineTerm.addMultiplier(t1);
-									cosineTerm.setCoefficient(t1.getCoefficient());
+									//cosineTerm.setCoefficient(t1.getCoefficient());
 									
 									ComplexTerm sineTerm = new ComplexTerm(Constants.VARIABLE_THETA);
 									t2 = (Term)ObjectUtil.cloneObject(t1);
 									sineTerm.setFunction(FunctionEnum.sin);
 									sineTerm.addMultiplier(t2);
-									sineTerm.setCoefficient(t2.getCoefficient());
+									//sineTerm.setCoefficient(t2.getCoefficient());
 									
 									f1.addPExpression(new ExpressionImpl(cosineTerm));
 									f2.addPExpression(new ExpressionImpl(sineTerm));
@@ -373,7 +373,6 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 								functionList.add(f2);
 							}
 							else{
-							
 								PolynomialFunction f = new PolynomialFunction();
 								for(Expression expression: expressionList){
 									f.addPExpression(expression);

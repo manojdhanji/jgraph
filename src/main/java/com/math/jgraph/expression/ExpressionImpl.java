@@ -269,10 +269,11 @@ public class ExpressionImpl implements Expression
 		
 		if(t instanceof ComplexTerm){
 			ComplexTerm c = (ComplexTerm)t;
-			for(Term _t:c.getMultiplier()){
+			/*for(Term _t:c.getMultiplier()){
 				list.add(_t);
 				getMultiplierList(_t, list);
-			}
+			}*/
+			list.addAll(c.getMultiplier());
 		}
 		return list;
 	}
