@@ -241,7 +241,7 @@ public class JGraphApplication extends JFrame
 					}
 					break;
 				case BuildExp:
-					Subject s = new ExpressionBuilder(FunctionFormType.valueOf((String)this.jComboBoxFormType.getSelectedItem()));
+					Subject s = new ExpressionBuilderFrame(FunctionFormType.valueOf((String)this.jComboBoxFormType.getSelectedItem()));
 					s.register((ExpressionBuilderEventListener)this);
 					break;
 				case Clear:
@@ -255,7 +255,7 @@ public class JGraphApplication extends JFrame
 					break;
 				case DrawAxes:
 					if(plane==null){
-						plane = new CartesianPlaneImpl((CartesianPlaneEventListener)this);
+						plane = new CartesianPlaneFrame((CartesianPlaneEventListener)this);
 					}
 					break;
 				case ZoomIn:
@@ -264,7 +264,7 @@ public class JGraphApplication extends JFrame
 							plane.disposeGui();
 							Constants.SCALE_FACTOR*=2;
 							Constants.NO_OF_LINES/=2;
-							plane = new CartesianPlaneImpl((CartesianPlaneEventListener)this);
+							plane = new CartesianPlaneFrame((CartesianPlaneEventListener)this);
 							if(functionForm!=null && functionForm.getListOfExpressionList()!=null)
 								this.jButtonMap.get(JButtonTypeEnum.Plot).doClick();
 						}
@@ -276,7 +276,7 @@ public class JGraphApplication extends JFrame
 							plane.disposeGui();
 							Constants.SCALE_FACTOR/=2;
 							Constants.NO_OF_LINES*=2;
-							plane = new CartesianPlaneImpl((CartesianPlaneEventListener)this);
+							plane = new CartesianPlaneFrame((CartesianPlaneEventListener)this);
 							if(functionForm!=null && functionForm.getListOfExpressionList()!=null)
 								this.jButtonMap.get(JButtonTypeEnum.Plot).doClick();
 							

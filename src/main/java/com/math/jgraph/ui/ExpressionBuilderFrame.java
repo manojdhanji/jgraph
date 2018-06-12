@@ -47,14 +47,14 @@ import com.math.jgraph.function.FunctionFormType;
 import com.math.jgraph.observer.ExpressionBuilderEventListener;
 import com.math.jgraph.observer.Observer;
 import com.math.jgraph.observer.Subject;
-public class ExpressionBuilder extends JFrame implements 
+public class ExpressionBuilderFrame extends JFrame implements 
 	ActionListener,CaretListener, Subject{
 	
 	private static final long serialVersionUID = 4088840495723968559L;
 	static final Logger logger;
 	static{
 		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(ExpressionBuilder.class);
+		logger = Logger.getLogger(ExpressionBuilderFrame.class);
 	}	
 	private static enum TermTypeEnum{
 		Simple,
@@ -79,7 +79,7 @@ public class ExpressionBuilder extends JFrame implements
 	};
 	private static enum AddTermEnum{
 		Multiplier,
-		Input,
+		Argument,
 		Exponent;
 	};
 	private char var;
@@ -122,7 +122,7 @@ public class ExpressionBuilder extends JFrame implements
 		String name = t.getClass().getSimpleName();
 		int i=0;
 		for(String key:keySet){
-			logger.debug("ExpressionBuilder.generateId: key="+ key);
+			logger.debug("ExpressionBuilderFrame.generateId: key="+ key);
 			if(key.matches("^"+name+"[\\d]+$")){
 				try{
 					int _i=Integer.parseInt(key.substring(name.length()));
@@ -136,10 +136,10 @@ public class ExpressionBuilder extends JFrame implements
 			}
 		}
 		String id = name+ df.format(i+1);
-		logger.debug("ExpressionBuilder.generateId: returning id: "+ id);
+		logger.debug("ExpressionBuilderFrame.generateId: returning id: "+ id);
 		return id;
 	}
-	public ExpressionBuilder(FunctionFormType functionFormType){
+	public ExpressionBuilderFrame(FunctionFormType functionFormType){
 		super("ExpressionImpl Builder:"+functionFormType.name());
 		//UIManager.put("JFrame.activeTitleBackground", Color.RED);
 		switch(functionFormType){
@@ -159,7 +159,7 @@ public class ExpressionBuilder extends JFrame implements
 	private void createAndShowGui() {
 		
 		model.addElement(AddTermEnum.Multiplier.name());
-		model.addElement(AddTermEnum.Input.name());
+		model.addElement(AddTermEnum.Argument.name());
 		jComboBoxAdd = new JComboBox<>(model);
 		
 		jComboBoxAdd.setEnabled(false);
@@ -331,30 +331,30 @@ public class ExpressionBuilder extends JFrame implements
 				case AddTerm:
 					key=jTextArea[0].getSelectedText();
 					if(logger.isDebugEnabled())
-						logger.debug("ExpressionBuilder.actionPerformed: "+key+"->"+expressionMap);
+						logger.debug("ExpressionBuilderFrame.actionPerformed: "+key+"->"+expressionMap);
 
 					if(key!=null && key.matches("^(Complex|Simple)Term[\\d]+$")){
 						Term i = expressionMap.get(key);
-						logger.debug("ExpressionBuilder.actionPerformed: currently saved term : "+t);
+						logger.debug("ExpressionBuilderFrame.actionPerformed: currently saved term : "+t);
 						ComplexTerm complexTerm = (ComplexTerm)t;
 
 						if(i!=null){
 							String s = (String)jComboBoxAdd.getSelectedItem();
-							logger.debug("ExpressionBuilder.actionPerformed: selected type: "+s);
+							logger.debug("ExpressionBuilderFrame.actionPerformed: selected type: "+s);
 							switch(AddTermEnum.valueOf(s)){
 								case Multiplier:
 									complexTerm.addMultiplier((Term)ObjectUtil.cloneObject(i));
 									break;
-								case Input:
-									complexTerm.addInput((Term)ObjectUtil.cloneObject(i));
+								case Argument:
+									complexTerm.addArgument((Term)ObjectUtil.cloneObject(i));
 									break;
 								case Exponent:
 									complexTerm.addExponent((Term)ObjectUtil.cloneObject(i));
 							}
 						}
 
-						logger.debug("ExpressionBuilder.actionPerformed: term to add: "+i);
-						logger.debug("ExpressionBuilder.actionPerformed: currently saved term changes to: "+complexTerm);
+						logger.debug("ExpressionBuilderFrame.actionPerformed: term to add: "+i);
+						logger.debug("ExpressionBuilderFrame.actionPerformed: currently saved term changes to: "+complexTerm);
 
 						jTextArea[1].setText(t.toString());
 						displayExpression();
@@ -368,7 +368,7 @@ public class ExpressionBuilder extends JFrame implements
 				case SaveTerm:
 					expressionList.add(new ExpressionImpl(t));
 					if(logger.isDebugEnabled())
-						logger.debug("ExpressionBuilder.actionPerformed: expression list: "+ expressionList);
+						logger.debug("ExpressionBuilderFrame.actionPerformed: expression list: "+ expressionList);
 					jTextArea[0].select(0,0);
 					break;
 				case SetCurrent:
@@ -420,8 +420,8 @@ public class ExpressionBuilder extends JFrame implements
 								break;
 						}
 						t.setCoefficient(coeff);
-						t.setPower(power);
-						String id = ExpressionBuilder.generateId(expressionMap,t);
+						t.setExponent(power);
+						String id = ExpressionBuilderFrame.generateId(expressionMap,t);
 						expressionMap.put(id, t);
 						displayExpression();
 						resetComboBoxes();
@@ -529,7 +529,7 @@ public class ExpressionBuilder extends JFrame implements
             public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					ExpressionBuilder eBuilder = new ExpressionBuilder();
+					ExpressionBuilderFrame eBuilder = new ExpressionBuilderFrame();
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}					

@@ -39,8 +39,8 @@ public class ExpressionImpl implements Expression
 	private void addToStack(Stackable s, int a, List<Stackable> stackables){
 		if(s instanceof ComplexTerm){
 			ComplexTerm c =(ComplexTerm)s;
-			List<Term> input = c.getInput();
-			List<Term> exponent = c.getExponent();
+			List<Term> input = c.getArgumentList();
+			List<Term> exponent = c.getExponentList();
 			if(Boolean.getBoolean(Constants.TEST) && logger.isDebugEnabled()){
 				logger.debug(MessageFormat.format("ExpressionImpl.stack Input: {0}",input));
 				logger.debug(MessageFormat.format("ExpressionImpl.stack: a: {0}",a));
@@ -97,6 +97,7 @@ public class ExpressionImpl implements Expression
 		if(Boolean.getBoolean(Constants.TEST) && logger.isDebugEnabled())
 			logger.debug(stackables);
 	}
+	
 	@Override
 	public double evaluate(double x)throws EvaluationException{
 		List<Stackable> stackables=null;
@@ -266,17 +267,18 @@ public class ExpressionImpl implements Expression
 	}
 	
 	private List<Term> getMultiplierList(Term t, List<Term> list){
-		
 		if(t instanceof ComplexTerm){
 			ComplexTerm c = (ComplexTerm)t;
 			/*for(Term _t:c.getMultiplier()){
 				list.add(_t);
 				getMultiplierList(_t, list);
 			}*/
-			list.addAll(c.getMultiplier());
+			list.addAll(c.getMultiplierList());
 		}
 		return list;
 	}
+	
+	@Override
 	public String toString(){
 		Iterator<Stackable> iter = this.stackables.iterator();
 		Stackable s= null;

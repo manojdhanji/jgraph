@@ -21,10 +21,10 @@ public class ComplexTerm extends Term {
 		DOMConfigurator.configure("log4j-graph.xml");
 		logger = Logger.getLogger(ComplexTerm.class);
 	}
-	protected final List<Term> multiplier = new ArrayList<Term>();
+	protected final List<Term> multiplierList = new ArrayList<Term>();
 	protected FunctionEnum function;
-	protected final List<Term> input = new ArrayList<Term>();
-	protected final List<Term> exponent = new ArrayList<Term>();
+	protected final List<Term> argumentList = new ArrayList<Term>();
+	protected final List<Term> exponentList = new ArrayList<Term>();
 	public ComplexTerm(){
 		this(Constants.VARIABLE_X);
 	}
@@ -38,42 +38,44 @@ public class ComplexTerm extends Term {
 		return this.function;
 	}
 
-	public void addMultiplier(List<Term> multiplier){
-		if(multiplier!=null && !multiplier.isEmpty())
-			this.multiplier.addAll(multiplier);
+	public void addMultiplierList(List<Term> multiplierList){
+		if(multiplierList!=null && 
+				!multiplierList.isEmpty())
+			this.multiplierList.addAll(multiplierList);
 	}
 	public void addMultiplier(Term multiplier){
 		if(multiplier!=null)
-			this.multiplier.add(multiplier);
+			this.multiplierList.add(multiplier);
 	}
 
-	public void addInput(List<Term> input){
-		if(input!=null && !input.isEmpty())
-			this.input.addAll(input);
+	public void addArgumentList(List<Term> argumentList){
+		if(argumentList!=null && !argumentList.isEmpty())
+			this.argumentList.addAll(argumentList);
 	}
-	public void addInput(Term input){
-		if(input!=null)
-			this.input.add(input);
+	public void addArgument(Term argument){
+		if(argument!=null)
+			this.argumentList.add(argument);
 	}
-	public void addExponent(List<Term> exponent){
-		if(exponent!=null && !exponent.isEmpty())
-			this.exponent.addAll(exponent);
+	public void addExponentList(List<Term> exponentList){
+		if(exponentList!=null && 
+				!exponentList.isEmpty())
+			this.exponentList.addAll(exponentList);
 	}
 	public void addExponent(Term exponent){
 		if(exponent!=null)
-			this.exponent.add(exponent);
+			this.exponentList.add(exponent);
 	}
-	public List<Term> getExponent(){
-		return this.exponent;
+	public List<Term> getExponentList(){
+		return this.exponentList;
 	}
-	public List<Term> getInput(){
-		return this.input;
+	public List<Term> getArgumentList(){
+		return this.argumentList;
 	}
-	public List<Term> getMultiplier(){
-		return this.multiplier;
+	public List<Term> getMultiplierList(){
+		return this.multiplierList;
 	}
 
-	
+	@Override
 	public String toString(){
 		StringBuilder buff = new StringBuilder();
 		if(Double.compare(Math.abs(coefficient), 1.0)!=0){
@@ -83,41 +85,40 @@ public class ComplexTerm extends Term {
 		else if(Double.compare(coefficient, -1.0)==0){
 			buff.append(Operation.Subtract.operation());
 		}
-		if(!multiplier.isEmpty() ){
-			for(Term t:multiplier){	
+		if(!multiplierList.isEmpty() ){
+			for(Term t:multiplierList){	
 				buff.append(t)
 					.append(Constants.MULTIPLY);
 			}
 		}
 				
-		if(Double.compare(power, 1.0)!=0){
+		if(Double.compare(exponent, 1.0)!=0){
 			buff.append(Constants.LEFT_PARENTHESES);
 		}
 		
 		if(function==FunctionEnum.pow){
-			
-			buff.append(ComplexTerm.sumOfTerms(this.input, this.var))
+			buff.append(ComplexTerm.sumOfTerms(this.argumentList, this.var))
 			    .append("^")
-				.append(ComplexTerm.sumOfTerms(this.exponent,this.var));
+				.append(ComplexTerm.sumOfTerms(this.exponentList,this.var));
 		}
 		else if(function==FunctionEnum.exp){
 			buff.append("e^")
-				.append(ComplexTerm.sumOfTerms(this.input,this.var));
+				.append(ComplexTerm.sumOfTerms(this.argumentList,this.var));
 		}
 		else if(function==FunctionEnum.expm1){
 			buff.append("e^")
-				.append(ComplexTerm.sumOfTerms(this.input,this.var))
+				.append(ComplexTerm.sumOfTerms(this.argumentList,this.var))
 				.append(" -1 ");
 		}
 		else{
 			buff.append(function.friendlyName())
-			    .append(ComplexTerm.sumOfTerms(this.input,this.var));
+			    .append(ComplexTerm.sumOfTerms(this.argumentList,this.var));
 		}
 							
-		if(Double.compare(power, 1.0)!=0){
+		if(Double.compare(exponent, 1.0)!=0){
 			buff.append(Constants.RIGHT_PARENTHESES)
 				.append("^")
-				.append(this.power);	
+				.append(this.exponent);	
 		}
 		return buff.toString();
 	}
@@ -143,6 +144,8 @@ public class ComplexTerm extends Term {
 		buffer.append(Constants.RIGHT_PARENTHESES);
 		return buffer.toString();
 	}
+	
+	@Override
 	public double evaluate(double x)throws EvaluationException{
 		
 		Method method = function.method();

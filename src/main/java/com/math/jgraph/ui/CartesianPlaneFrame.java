@@ -42,13 +42,13 @@ import com.math.jgraph.function.PolynomialFunction;
 import com.math.jgraph.observer.CartesianPlaneEventListener;
 import com.math.jgraph.observer.Observer;
 import com.math.jgraph.observer.Subject;
-public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlane {
+public class CartesianPlaneFrame extends JFrame implements Subject, CartesianPlane {
 	
 	private static final long serialVersionUID = -7361610486148305576L;
 	static final Logger logger;
 	static{
 		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(CartesianPlaneImpl.class);
+		logger = Logger.getLogger(CartesianPlaneFrame.class);
 	}
 	double area1=0.0;
 	double area2=0.0;
@@ -74,11 +74,11 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 			jPanelGraph.setToolTipText(s.toString());
 		}
 	}
-	public CartesianPlaneImpl(Observer o){
+	public CartesianPlaneFrame(Observer o){
 		this();
 		this.register(o);
 	}
-	public CartesianPlaneImpl(){
+	public CartesianPlaneFrame(){
 		super("Cartesian Plane");
 		for(int i = 1;i<=Constants.NO_OF_LINES;i++){
 			xLines.add(new Line2D.Double(0, i*Constants.SCALE_FACTOR, 
@@ -109,7 +109,6 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 	
 	@Override
 	public void createAndShowGui() {
-		
 		//ImageIcon loading = new ImageIcon("../img/ajax-loader.gif");
 		//jLabelLoading = new JLabel("loading... ", loading, JLabel.CENTER);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -122,7 +121,6 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 				}
 			}
 		);
-
 
 		this.setBounds(625,0,625+Constants.X_LENGTH,Constants.Y_LENGTH);
 		this.setSize(Constants.X_LENGTH,Constants.Y_LENGTH);
@@ -212,7 +210,7 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 					plotDerivative(g2,lineList,color);
 				}
 				long time2 = new java.util.Date().getTime();
-				logger.info("com.math.jgraph.ui.CartesianPlaneImpl$2.executeSequentially: "+(time2-time1)+" secs");
+				logger.info("com.math.jgraph.ui.CartesianPlaneFrame$2.executeSequentially: "+(time2-time1)+" secs");
 			}
 			private void plotDerivative(Graphics2D g2,
 											List<Line2D.Double> lineList,
@@ -288,7 +286,7 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 				List<Future<Line2D.Double>> imageFutures = new ArrayList<Future<Line2D.Double>>();
 				List<Line2D.Double> lineList = new ArrayList<Line2D.Double>();
 				for(double x = l;x<h;x+=Constants.INCREMENTAL_STEP){
-					imageFutures.add(service.submit(new CartesianPlaneImpl.ImageCallable(functionList,x)));
+					imageFutures.add(service.submit(new CartesianPlaneFrame.ImageCallable(functionList,x)));
 				}
 				for(Future<Line2D.Double> imageFuture: imageFutures){
 					try{
@@ -325,7 +323,7 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 				}
 				service.shutdown();
 				long time2 = new java.util.Date().getTime();
-				logger.info("com.math.jgraph.ui.CartesianPlaneImpl$2.executeConcurrently: "+(time2-time1)+" secs");
+				logger.info("com.math.jgraph.ui.CartesianPlaneFrame$2.executeConcurrently: "+(time2-time1)+" secs");
 			}
 			
             @Override
@@ -336,19 +334,19 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
 				g2.setBackground(Color.WHITE);
 				drawAxes(g2,  xLines);
 				drawAxes(g2,  yLines);
-				if(CartesianPlaneImpl.this.functionForm!=null){
-					List<List<Expression>> listOfExpressionList = CartesianPlaneImpl.this.functionForm.getListOfExpressionList();
+				if(CartesianPlaneFrame.this.functionForm!=null){
+					List<List<Expression>> listOfExpressionList = CartesianPlaneFrame.this.functionForm.getListOfExpressionList();
 					
 					
 					List<Function> functionList = new ArrayList<Function>();
-					double h = CartesianPlaneImpl.this.functionForm.getH();
-					double l = CartesianPlaneImpl.this.functionForm.getL();
-					Color[] color = CartesianPlaneImpl.this.functionForm.getColor();
+					double h = CartesianPlaneFrame.this.functionForm.getH();
+					double l = CartesianPlaneFrame.this.functionForm.getL();
+					Color[] color = CartesianPlaneFrame.this.functionForm.getColor();
 					
 					for(List<Expression> expressionList: listOfExpressionList){
 						if(expressionList!=null){
 							//convert polar to parametric form
-							if(CartesianPlaneImpl.this.functionForm.getType()==FunctionFormType.Polar){
+							if(CartesianPlaneFrame.this.functionForm.getType()==FunctionFormType.Polar){
 								PolynomialFunction f1 = new PolynomialFunction();
 								PolynomialFunction f2 = new PolynomialFunction();
 								Term t1 = null;
@@ -445,7 +443,7 @@ public class CartesianPlaneImpl extends JFrame implements Subject, CartesianPlan
             public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					CartesianPlaneImpl app = new CartesianPlaneImpl();
+					CartesianPlaneFrame app = new CartesianPlaneFrame();
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}				
