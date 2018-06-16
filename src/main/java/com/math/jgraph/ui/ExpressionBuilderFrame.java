@@ -140,7 +140,7 @@ public class ExpressionBuilderFrame extends JFrame implements
 		return id;
 	}
 	public ExpressionBuilderFrame(FunctionFormType functionFormType){
-		super("ExpressionImpl Builder:"+functionFormType.name());
+		super("ExpressionBuilder:"+functionFormType.name());
 		//UIManager.put("JFrame.activeTitleBackground", Color.RED);
 		switch(functionFormType){
 			case Functional:

@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -88,7 +90,18 @@ public class JGraphApplication extends JFrame
 		jTextArea.setLineWrap(true);
 		jTextArea.setWrapStyleWord(true);
 		jTextArea.setEditable(false);
-
+		jTextArea.addMouseListener(
+			new MouseAdapter() {
+				@Override 
+				public void mouseClicked(MouseEvent evt) {
+				    if (evt.getClickCount() >= 2) {
+				      
+				      Object o = evt.getSource();
+				      String s = jTextArea.getSelectedText();
+				      System.out.println("click: "+s);
+				    }
+				}
+			});
 
 		jCheckBox[0] = new JCheckBox("f(x)", true);
 		jCheckBox[1] = new JCheckBox("f'(x)", false);
@@ -255,7 +268,7 @@ public class JGraphApplication extends JFrame
 					break;
 				case DrawAxes:
 					if(plane==null){
-						plane = new CartesianPlaneFrame((CartesianPlaneEventListener)this);
+						plane = new CartesianPlaneFrame(this);
 					}
 					break;
 				case ZoomIn:
@@ -285,11 +298,22 @@ public class JGraphApplication extends JFrame
 					break;
 				case SaveExp:
 					if(this.functionForm!=null){
-						RandomAccessFile raf = null;
-						try {
-							raf = new RandomAccessFile("functions.dat", "rw");
-							long pointer = raf.getFilePointer();
-							raf.seek(pointer);
+						try (RandomAccessFile raf = new RandomAccessFile("functions.dat", "rw");){
+							/*
+							List<FunctionForm> functionFormList=null;
+							if(raf.length()==0L) {
+								functionFormList = new ArrayList<>();
+							}
+							else {
+								byte[] arr = new byte[(int) raf.length()];
+								raf.read(arr);
+								functionFormList  = (List<FunctionForm>)ObjectUtil.deserialize(arr);
+							}
+							functionFormList.add(functionForm);
+							*/
+							//long pointer = raf.getFilePointer();
+							raf.seek(0);
+							//raf.write(ObjectUtil.serialize(functionFormList));
 							raf.write(ObjectUtil.serialize(this.functionForm));
 							
 						} catch (FileNotFoundException foe) {
@@ -300,27 +324,26 @@ public class JGraphApplication extends JFrame
 							logger.error(ioe);
 							JOptionPane.showMessageDialog(this, "ExpressionImpl could not be saved!",
 									"Error", JOptionPane.ERROR_MESSAGE);
-						}
-						finally{
-							try{
-								if(raf!=null)
-									raf.close();
-							}
-							catch (IOException ioe) {
-								logger.error(ioe);
-							}
-						}
+						} /*catch (ClassNotFoundException cnfe) {
+							logger.error(cnfe);
+							JOptionPane.showMessageDialog(this, "ExpressionImpl could not be loaded!",
+									"Error", JOptionPane.ERROR_MESSAGE);
+						}*/
 					}
 					break;
 				case LoadExp:
-					RandomAccessFile raf = null;
-					try {
-						raf = new RandomAccessFile("functions.dat", "r");
+					try (RandomAccessFile raf = new RandomAccessFile("functions.dat", "r")){
 						byte[] arr = new byte[(int) raf.length()];
 						raf.read(arr);
-						//this.functionForm=(FunctionForm)ObjectUtil.deserialize(arr);
-						this.updateTextArea((FunctionForm)ObjectUtil.deserialize(arr));
-						
+						this.functionForm=(FunctionForm)ObjectUtil.deserialize(arr);
+						/*
+						List<FunctionForm> functionFormList =(List<FunctionForm>)ObjectUtil.deserialize(arr);
+						this.jTextArea.setText("");
+						int counter=1;
+						for(FunctionForm f: functionFormList)
+							this.updateTextArea(f, counter++);
+						*/
+						this.updateTextArea((FunctionForm)ObjectUtil.deserialize(arr), 1);
 					} catch (FileNotFoundException foe) {
 						logger.error(foe);
 						JOptionPane.showMessageDialog(this, "ExpressionImpl could not be loaded!",
@@ -337,15 +360,6 @@ public class JGraphApplication extends JFrame
 								"Error", JOptionPane.ERROR_MESSAGE);
 
 					}
-					finally{
-						try{
-							if(raf!=null)
-								raf.close();
-						}
-						catch (IOException ioe) {
-							logger.error(ioe);
-						}
-					}
 					break;
 			}
 		}
@@ -353,23 +367,25 @@ public class JGraphApplication extends JFrame
 	public void areaCalculationUpdate(double[] area){
 		if(area!=null){
 			this.area=area;
-			updateTextArea(this.functionForm);
+			updateTextArea(this.functionForm, 1);
 		}
 	}
+
 	@Override
 	public void windowClosureUpdate(){
 		this.plane=null;
 	}
+	
 	@Override
 	public void expressionListUpdate(/*List<Expression> expressions*/FunctionForm functionForm){
 		
 		if(functionForm!=null){
 			//this.functionForm=functionForm;
-			updateTextArea(functionForm);
+			updateTextArea(functionForm, 1);
 		}
 	}
 	
-	private synchronized void updateTextArea(FunctionForm functionForm){
+	private synchronized void updateTextArea(FunctionForm functionForm, int n){
 		if(functionForm!=null){
 			if(
 				(functionForm.getType()==FunctionFormType.Functional && 
@@ -391,7 +407,8 @@ public class JGraphApplication extends JFrame
 				return;
 			}
 			this.functionForm=functionForm;
-			StringBuilder buffer = new StringBuilder("ExpressionImpl:");
+			StringBuilder buffer = new StringBuilder("Expression");
+			buffer.append(n);
 			int counter = 0;
 			for(List<Expression> expressions:functionForm.getListOfExpressionList()){
 				if(expressions!=null){
@@ -478,6 +495,7 @@ public class JGraphApplication extends JFrame
 				}
 				catch(ArrayIndexOutOfBoundsException e){}
 			}
+			//jTextArea.append(buffer.toString());
 			jTextArea.setText(buffer.toString());
 			area=null;
 		}

@@ -98,6 +98,7 @@ public class CartesianPlaneFrame extends JFrame implements Subject, CartesianPla
 		this.calculateArea=calculateArea;
 		this.functionForm=functionForm;
 		this.update(getGraphics());
+		//this.repaint();
 	}
 	
 	@Override
@@ -330,10 +331,12 @@ public class CartesianPlaneFrame extends JFrame implements Subject, CartesianPla
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
 				Graphics2D g2 = (Graphics2D)g;
+				
 				g2.setColor(Color.GRAY);
 				g2.setBackground(Color.WHITE);
 				drawAxes(g2,  xLines);
 				drawAxes(g2,  yLines);
+				
 				if(CartesianPlaneFrame.this.functionForm!=null){
 					List<List<Expression>> listOfExpressionList = CartesianPlaneFrame.this.functionForm.getListOfExpressionList();
 					
