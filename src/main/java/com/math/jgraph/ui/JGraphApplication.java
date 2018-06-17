@@ -96,9 +96,9 @@ public class JGraphApplication extends JFrame
 				public void mouseClicked(MouseEvent evt) {
 				    if (evt.getClickCount() >= 2) {
 				      
-				      Object o = evt.getSource();
 				      String s = jTextArea.getSelectedText();
 				      System.out.println("click: "+s);
+				      //TODO more work to be done to support saving multiple expressions and loading by choice.
 				    }
 				}
 			});
