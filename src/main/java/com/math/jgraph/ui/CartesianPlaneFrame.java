@@ -24,8 +24,8 @@ import java.util.concurrent.Future;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.math.jgraph.ObjectUtil;
 import com.math.jgraph.ThreadLocalContext;
@@ -45,11 +45,7 @@ import com.math.jgraph.observer.Subject;
 public class CartesianPlaneFrame extends JFrame implements Subject, CartesianPlane {
 	
 	private static final long serialVersionUID = -7361610486148305576L;
-	static final Logger logger;
-	static{
-		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(CartesianPlaneFrame.class);
-	}
+	private static final Logger logger = LoggerFactory.getLogger(CartesianPlaneFrame.class);
 	double area1=0.0;
 	double area2=0.0;
 	private List<Line2D.Double> xLines = new ArrayList<Line2D.Double>();

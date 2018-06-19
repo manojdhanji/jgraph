@@ -1,13 +1,13 @@
 package com.math.jgraph.expression;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.ListIterator;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Stack;
 
-import org.apache.log4j.xml.DOMConfigurator;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.math.jgraph.ThreadLocalContext;
 import com.math.jgraph.constant.Constants;
@@ -15,11 +15,7 @@ import com.math.jgraph.exception.EvaluationException;
 public class ExpressionImpl implements Expression
 {
 	private static final long serialVersionUID = -5541766297442697847L;
-	static final Logger logger;
-	static{
-		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(ExpressionImpl.class);
-	}	
+	private static final Logger logger = LoggerFactory.getLogger(ExpressionImpl.class);
 	private List<Stackable> stackables;
 	private Stackable stackable;
 	public Term getTerm(){
@@ -95,7 +91,7 @@ public class ExpressionImpl implements Expression
 			return;
 		}
 		if(Boolean.getBoolean(Constants.TEST) && logger.isDebugEnabled())
-			logger.debug(stackables);
+			logger.debug(stackables.toString());
 	}
 	
 	@Override

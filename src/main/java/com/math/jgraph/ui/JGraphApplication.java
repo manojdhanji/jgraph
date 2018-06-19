@@ -30,8 +30,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.math.jgraph.ObjectUtil;
 import com.math.jgraph.constant.Constants;
@@ -46,11 +46,7 @@ public class JGraphApplication extends JFrame
 	implements ActionListener, ExpressionBuilderEventListener, CartesianPlaneEventListener{
 	
 	private static final long serialVersionUID = -968107859388491769L;
-	static final Logger logger;
-	static{
-		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(JGraphApplication.class);
-	}
+	private static final Logger logger = LoggerFactory.getLogger(JGraphApplication.class);
 	
 	private static enum JButtonTypeEnum{
 		BuildExp,
@@ -316,16 +312,16 @@ public class JGraphApplication extends JFrame
 							//raf.write(ObjectUtil.serialize(functionFormList));
 							raf.write(ObjectUtil.serialize(this.functionForm));
 							
-						} catch (FileNotFoundException foe) {
-							logger.error(foe);
+						} catch (FileNotFoundException fnfe) {
+							logger.error(fnfe.getMessage(), fnfe);
 							JOptionPane.showMessageDialog(this, "ExpressionImpl could not be saved!",
 									"Error", JOptionPane.ERROR_MESSAGE);
 						} catch (IOException ioe) {
-							logger.error(ioe);
+							logger.error(ioe.getMessage(), ioe);
 							JOptionPane.showMessageDialog(this, "ExpressionImpl could not be saved!",
 									"Error", JOptionPane.ERROR_MESSAGE);
 						} /*catch (ClassNotFoundException cnfe) {
-							logger.error(cnfe);
+							logger.error(cnfe.getMessage(), cnfe);
 							JOptionPane.showMessageDialog(this, "ExpressionImpl could not be loaded!",
 									"Error", JOptionPane.ERROR_MESSAGE);
 						}*/
@@ -344,18 +340,18 @@ public class JGraphApplication extends JFrame
 							this.updateTextArea(f, counter++);
 						*/
 						this.updateTextArea((FunctionForm)ObjectUtil.deserialize(arr), 1);
-					} catch (FileNotFoundException foe) {
-						logger.error(foe);
+					} catch (FileNotFoundException fnfe) {
+						logger.error(fnfe.getMessage(), fnfe);
 						JOptionPane.showMessageDialog(this, "ExpressionImpl could not be loaded!",
 								"Error", JOptionPane.ERROR_MESSAGE);
 						
 					} catch (IOException ioe) {
-						logger.error(ioe);
+						logger.error(ioe.getMessage(), ioe);
 						JOptionPane.showMessageDialog(this, "ExpressionImpl could not be loaded!",
 								"Error", JOptionPane.ERROR_MESSAGE);
 						
 					} catch (ClassNotFoundException cnfe) {
-						logger.error(cnfe);
+						logger.error(cnfe.getMessage(), cnfe);
 						JOptionPane.showMessageDialog(this, "ExpressionImpl could not be loaded!",
 								"Error", JOptionPane.ERROR_MESSAGE);
 

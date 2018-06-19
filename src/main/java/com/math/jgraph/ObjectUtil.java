@@ -5,15 +5,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public class ObjectUtil
 {
-	static final Logger logger;
-	static{
-		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(ObjectUtil.class);
-	}
+	private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
 	public static Object cloneObject (Object obj) {
 		Object copy = null;
 		ObjectOutputStream oos = null;
@@ -29,10 +25,10 @@ public class ObjectUtil
 			
 		}
 		catch(IOException e){
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		}
 		catch(ClassNotFoundException e){
-			logger.error(e);
+			logger.error(e.getMessage(), e);
 		}
 		finally{
 			if(oos!=null){

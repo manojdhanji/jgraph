@@ -4,18 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.math.jgraph.constant.Constants;
 import com.math.jgraph.exception.EvaluationException;
 import com.math.jgraph.expression.Expression;
 public class PolynomialFunction implements Function{
-	static final Logger logger;
-	static{
-		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(PolynomialFunction.class);
-	}	
+	private static final Logger logger = LoggerFactory.getLogger(PolynomialFunction.class);
 	protected List<Expression> pExpressions = new ArrayList<Expression>();
 	public PolynomialFunction(){
 		super();

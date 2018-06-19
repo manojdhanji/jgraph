@@ -31,8 +31,8 @@ import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.math.jgraph.ObjectUtil;
 import com.math.jgraph.constant.Constants;
@@ -51,11 +51,7 @@ public class ExpressionBuilderFrame extends JFrame implements
 	ActionListener,CaretListener, Subject{
 	
 	private static final long serialVersionUID = 4088840495723968559L;
-	static final Logger logger;
-	static{
-		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(ExpressionBuilderFrame.class);
-	}	
+	private static final Logger logger = LoggerFactory.getLogger(ExpressionBuilderFrame.class);
 	private static enum TermTypeEnum{
 		Simple,
 		Complex;
@@ -129,8 +125,8 @@ public class ExpressionBuilderFrame extends JFrame implements
 					if(_i>i)
 						i=_i;
 				}
-				catch(NumberFormatException e){
-					logger.error(e);
+				catch(NumberFormatException nfe){
+					logger.error(nfe.getMessage(), nfe);
 					i=m.size();
 				}
 			}

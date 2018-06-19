@@ -1,26 +1,21 @@
 package com.math.jgraph.expression;
-import java.text.MessageFormat;
-import java.util.List;
-import java.util.ArrayList;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.log4j.xml.DOMConfigurator;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.math.jgraph.ThreadLocalContext;
 import com.math.jgraph.constant.Constants;
 import com.math.jgraph.exception.EvaluationException;
 import com.math.jgraph.function.FunctionEnum;
 public class ComplexTerm extends Term {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 7285409640920274008L;
-	static final Logger logger;
-	static{
-		DOMConfigurator.configure("log4j-graph.xml");
-		logger = Logger.getLogger(ComplexTerm.class);
-	}
+	private static final Logger logger = LoggerFactory.getLogger(ComplexTerm.class);
+	
 	protected final List<Term> multiplierList = new ArrayList<Term>();
 	protected FunctionEnum function;
 	protected final List<Term> argumentList = new ArrayList<Term>();
